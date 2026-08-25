@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  // Initialize with February 2023 as shown in blueprint
-  const [month, setMonth] = useState(1); // 1 = February
+  const [month, setMonth] = useState(1); // February
   const [year, setYear] = useState(2023);
   const [isEditing, setIsEditing] = useState(false);
   const [yearInput, setYearInput] = useState('2023');
@@ -13,28 +12,23 @@ function App() {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  // Get days in month
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  // Get first day of month (0 = Sunday)
   const getFirstDay = (month, year) => {
     return new Date(year, month, 1).getDay();
   };
 
-  // Generate calendar days
   const generateDays = () => {
     const daysInMonth = getDaysInMonth(month, year);
     const firstDay = getFirstDay(month, year);
     const days = [];
 
-    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
     }
 
-    // Days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(i);
     }
@@ -44,12 +38,10 @@ function App() {
 
   const calendarDays = generateDays();
 
-  // Month change handler
   const handleMonthChange = (e) => {
     setMonth(parseInt(e.target.value));
   };
 
-  // Year edit handlers
   const handleYearDoubleClick = () => {
     setIsEditing(true);
     setYearInput(year.toString());
@@ -73,7 +65,6 @@ function App() {
     }
   };
 
-  // Navigation handlers
   const handlePrevMonth = () => {
     if (month === 0) {
       setMonth(11);
@@ -100,7 +91,6 @@ function App() {
     setYear(year + 1);
   };
 
-  // Build calendar table rows
   const buildRows = () => {
     const rows = [];
     for (let i = 0; i < calendarDays.length; i += 7) {
@@ -119,12 +109,8 @@ function App() {
     <div className="App">
       <h1 id="calendar-heading">Calendar</h1>
       
-      <div style={{ marginBottom: '20px' }}>
-        <select 
-          id="month-select" 
-          value={month} 
-          onChange={handleMonthChange}
-        >
+      <div>
+        <select id="month-select" value={month} onChange={handleMonthChange}>
           {months.map((m, i) => (
             <option key={i} value={i}>{m}</option>
           ))}
@@ -140,21 +126,16 @@ function App() {
               onBlur={handleYearInputBlur}
               onKeyDown={handleYearInputKeyDown}
               autoFocus
-              style={{ width: '80px', fontSize: '18px', textAlign: 'center' }}
             />
           ) : (
-            <span 
-              id="year-text"
-              onDoubleClick={handleYearDoubleClick}
-              style={{ cursor: 'pointer', padding: '5px' }}
-            >
+            <span id="year-text" onDoubleClick={handleYearDoubleClick}>
               {year}
             </span>
           )}
         </span>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ margin: '20px 0' }}>
         <button id="prev-month" onClick={handlePrevMonth}>← Month</button>
         <button id="next-month" onClick={handleNextMonth}>Month →</button>
         <button id="prev-year" onClick={handlePrevYear}>← Year</button>
@@ -164,13 +145,13 @@ function App() {
       <table id="calendar-table" style={{ margin: '0 auto', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Sun</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Mon</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Tue</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Wed</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Thu</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Fri</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Sat</th>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
           </tr>
         </thead>
         <tbody>
