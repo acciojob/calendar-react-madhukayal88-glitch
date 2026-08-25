@@ -1,154 +1,200 @@
-Skip to content
-acciojob
-calendar-react-madhukayal88-glitch
-Repository navigation
-Code
-Issues
-Pull requests
-Agents
-Actions
-Projects
-Wiki
-Security and quality
-3
- (3)
-Insights
-Settings
-acciojob
-calendar-react-madhukayal88-glitch
-Public
-Go to file
-t
-T
-Name		
-madhukayal88-glitch
-madhukayal88-glitch
-Update App.css
-aebdbcd
- · 
-last week
-public
-Initialize project using Create React App
-last week
-src
-Update App.css
-last week
-.gitignore
-Initialize project using Create React App
-last week
-README.md
-Initialize project using Create React App
-last week
-package-lock.json
-Initialize project using Create React App
-last week
-package.json
-Initialize project using Create React App
-last week
-Repository files navigation
-README
-Getting Started with Create React App
-This project was bootstrapped with Create React App.
+import React, { useState } from 'react';
+import './App.css';
 
-Available Scripts
-In the project directory, you can run:
+function App() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
+  const [isEditingYear, setIsEditingYear] = useState(false);
+  const [yearInput, setYearInput] = useState(selectedYear.toString());
 
-npm start
-Runs the app in the development mode.
-Open http://localhost:3000 to view it in your browser.
+  // Get days in month
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
 
-The page will reload when you make changes.
-You may also see any lint errors in the console.
+  // Get first day of month (0 = Sunday, 1 = Monday, etc.)
+  const getFirstDayOfMonth = (month, year) => {
+    return new Date(year, month, 1).getDay();
+  };
 
-npm test
-Launches the test runner in the interactive watch mode.
-See the section about running tests for more information.
+  // Generate calendar days
+  const generateCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
+    const firstDay = getFirstDayOfMonth(selectedMonth, selectedYear);
+    const days = [];
 
-npm run build
-Builds the app for production to the build folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    // Empty cells for days before the first day of month
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
 
-The build is minified and the filenames include the hashes.
-Your app is ready to be deployed!
+    // Actual days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i);
+    }
 
-See the section about deployment for more information.
+    return days;
+  };
 
-npm run eject
-Note: this is a one-way operation. Once you eject, you can't go back!
+  const calendarDays = generateCalendarDays();
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
-If you aren't satisfied with the build tool and configuration choices, you can eject at any time. This command will remove the single build dependency from your project.
+  // Handlers
+  const handleMonthChange = (e) => {
+    const newMonth = parseInt(e.target.value);
+    setSelectedMonth(newMonth);
+    const newDate = new Date(selectedYear, newMonth, 1);
+    setCurrentDate(newDate);
+  };
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except eject will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  const handleYearDoubleClick = () => {
+    setIsEditingYear(true);
+    setYearInput(selectedYear.toString());
+  };
 
-You don't have to ever use eject. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  const handleYearInputChange = (e) => {
+    setYearInput(e.target.value);
+  };
 
-Learn More
-You can learn more in the Create React App documentation.
+  const handleYearInputBlur = () => {
+    const newYear = parseInt(yearInput);
+    if (!isNaN(newYear) && newYear > 0) {
+      setSelectedYear(newYear);
+      const newDate = new Date(newYear, selectedMonth, 1);
+      setCurrentDate(newDate);
+    }
+    setIsEditingYear(false);
+  };
 
-To learn React, check out the React documentation.
+  const handleYearInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleYearInputBlur();
+    }
+  };
 
-Code Splitting
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+  const handlePrevMonth = () => {
+    let newMonth = selectedMonth - 1;
+    let newYear = selectedYear;
+    if (newMonth < 0) {
+      newMonth = 11;
+      newYear--;
+    }
+    setSelectedMonth(newMonth);
+    setSelectedYear(newYear);
+    const newDate = new Date(newYear, newMonth, 1);
+    setCurrentDate(newDate);
+  };
 
-Analyzing the Bundle Size
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+  const handleNextMonth = () => {
+    let newMonth = selectedMonth + 1;
+    let newYear = selectedYear;
+    if (newMonth > 11) {
+      newMonth = 0;
+      newYear++;
+    }
+    setSelectedMonth(newMonth);
+    setSelectedYear(newYear);
+    const newDate = new Date(newYear, newMonth, 1);
+    setCurrentDate(newDate);
+  };
 
-Making a Progressive Web App
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+  const handlePrevYear = () => {
+    const newYear = selectedYear - 1;
+    setSelectedYear(newYear);
+    const newDate = new Date(newYear, selectedMonth, 1);
+    setCurrentDate(newDate);
+  };
 
-Advanced Configuration
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+  const handleNextYear = () => {
+    const newYear = selectedYear + 1;
+    setSelectedYear(newYear);
+    const newDate = new Date(newYear, selectedMonth, 1);
+    setCurrentDate(newDate);
+  };
 
-Deployment
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+  return (
+    <div className="App" id="calendar-app">
+      <h1 id="calendar-heading">Calendar</h1>
+      
+      <div id="calendar-controls">
+        <div id="month-year-controls">
+          <select 
+            id="month-select" 
+            value={selectedMonth} 
+            onChange={handleMonthChange}
+          >
+            {monthNames.map((month, index) => (
+              <option key={index} value={index}>
+                {month}
+              </option>
+            ))}
+          </select>
+          
+          <div id="year-display">
+            {isEditingYear ? (
+              <input
+                id="year-input"
+                type="number"
+                value={yearInput}
+                onChange={handleYearInputChange}
+                onBlur={handleYearInputBlur}
+                onKeyDown={handleYearInputKeyDown}
+                autoFocus
+              />
+            ) : (
+              <span 
+                id="year-text" 
+                onDoubleClick={handleYearDoubleClick}
+              >
+                {selectedYear}
+              </span>
+            )}
+          </div>
+        </div>
+        
+        <div id="navigation-buttons">
+          <button id="prev-month" onClick={handlePrevMonth}>← Month</button>
+          <button id="next-month" onClick={handleNextMonth}>Month →</button>
+          <button id="prev-year" onClick={handlePrevYear}>← Year</button>
+          <button id="next-year" onClick={handleNextYear}>Year →</button>
+        </div>
+      </div>
 
-npm run build fails to minify
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+      <table id="calendar-table">
+        <thead>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: Math.ceil(calendarDays.length / 7) }, (_, weekIndex) => {
+            const start = weekIndex * 7;
+            const end = start + 7;
+            const week = calendarDays.slice(start, end);
+            return (
+              <tr key={weekIndex}>
+                {week.map((day, dayIndex) => (
+                  <td key={dayIndex}>
+                    {day !== null ? day : ''}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
-About
-No description, website, or topics provided.
-Resources
-Readme
-Activity
-Custom properties
-Stars
-0 stars
-Watchers
-0 watching
-Forks
-0 forks
-Report repository
-Releases
-No releases published
-Create a new release
-Packages
-No packages published
-Publish your first package
-Contributors
-2
- (2)
-@madhukayal88-glitch
-madhukayal88-glitchkayalvizhi
-@acciojob-tech-team-3
-acciojob-tech-team-3
-Languages
-JavaScript
-53.3%
-CSS
-33.7%
-HTML
-13%
-Generated from acciojob/calendar-react
-Footer
-© 2026 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Community
-Docs
-Contact
-Manage cookies
-Do not share my personal information
- 
+export default App;
