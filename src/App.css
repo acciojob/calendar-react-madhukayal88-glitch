@@ -20,8 +20,9 @@
 
 #year-text {
   font-weight: bold;
-  border: 2px solid transparent;
   padding: 5px 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
 }
 
 #year-text:hover {
@@ -30,9 +31,12 @@
 }
 
 #year-input {
+  padding: 5px 10px;
+  font-size: 18px;
+  width: 80px;
+  text-align: center;
   border: 2px solid #007bff;
   border-radius: 4px;
-  padding: 5px;
 }
 
 #calendar-table {
@@ -42,12 +46,15 @@
 
 #calendar-table th {
   background-color: #f2f2f2;
-  font-weight: bold;
+  padding: 8px;
+  border: 1px solid #ddd;
 }
 
 #calendar-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
   height: 40px;
-  width: 40px;
 }
 
 button {
