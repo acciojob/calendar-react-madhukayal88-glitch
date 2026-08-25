@@ -1,28 +1,14 @@
 .App {
   font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 50px auto;
   padding: 20px;
   text-align: center;
 }
 
 #calendar-heading {
-  color: #333;
+  font-size: 28px;
   margin-bottom: 20px;
-}
-
-#calendar-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-#month-year-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
 }
 
 #month-select {
@@ -30,90 +16,50 @@
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  cursor: pointer;
-}
-
-#year-display {
-  font-size: 18px;
-  font-weight: bold;
-  min-width: 100px;
 }
 
 #year-text {
-  padding: 5px 10px;
+  font-weight: bold;
   border: 2px solid transparent;
-  cursor: pointer;
-  display: inline-block;
+  padding: 5px 10px;
 }
 
 #year-text:hover {
   border: 2px solid #007bff;
   border-radius: 4px;
-  background-color: #f8f9fa;
 }
 
 #year-input {
-  font-size: 18px;
-  padding: 5px 10px;
-  width: 80px;
-  text-align: center;
   border: 2px solid #007bff;
   border-radius: 4px;
-}
-
-#navigation-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-#navigation-buttons button {
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-#navigation-buttons button:hover {
-  background-color: #e0e0e0;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-#navigation-buttons button:active {
-  transform: translateY(0px);
+  padding: 5px;
 }
 
 #calendar-table {
   width: 100%;
-  border-collapse: collapse;
   margin-top: 20px;
 }
 
 #calendar-table th {
-  background-color: #f8f9fa;
+  background-color: #f2f2f2;
   font-weight: bold;
-  padding: 12px;
-  border: 1px solid #ddd;
-  color: #333;
 }
 
 #calendar-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  height: 50px;
-  font-size: 16px;
+  height: 40px;
+  width: 40px;
 }
 
-#calendar-table tr:nth-child(even) td {
-  background-color: #fafafa;
+button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-#calendar-table td:hover {
-  background-color: #e3f2fd;
+button:hover {
+  background-color: #e0e0e0;
 }
