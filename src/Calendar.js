@@ -14,18 +14,15 @@ export default function Calendar() {
   const [isEditingYear, setIsEditingYear] = useState(false);
   const [yearInput, setYearInput] = useState(currentDate.getFullYear().toString());
 
-  // Days in selected month (handles leap years automatically)
   const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-  
-  // Starting day index (0 = Sun, 1 = Mon, etc.)
   const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
 
-  // Navigation handlers
   const handlePrevMonth = () => {
     if (selectedMonth === 0) {
       setSelectedMonth(11);
-      setSelectedYear((prev) => prev - 1);
-      setYearInput((selectedYear - 1).toString());
+      const newYear = selectedYear - 1;
+      setSelectedYear(newYear);
+      setYearInput(newYear.toString());
     } else {
       setSelectedMonth((prev) => prev - 1);
     }
@@ -34,8 +31,9 @@ export default function Calendar() {
   const handleNextMonth = () => {
     if (selectedMonth === 11) {
       setSelectedMonth(0);
-      setSelectedYear((prev) => prev + 1);
-      setYearInput((selectedYear + 1).toString());
+      const newYear = selectedYear + 1;
+      setSelectedYear(newYear);
+      setYearInput(newYear.toString());
     } else {
       setSelectedMonth((prev) => prev + 1);
     }
@@ -57,7 +55,6 @@ export default function Calendar() {
     setSelectedMonth(Number(e.target.value));
   };
 
-  // Year double-click & input handlers
   const handleYearDoubleClick = () => {
     setIsEditingYear(true);
   };
@@ -71,7 +68,7 @@ export default function Calendar() {
     if (!isNaN(parsedYear) && parsedYear > 0) {
       setSelectedYear(parsedYear);
     } else {
-      setYearInput(selectedYear.toString()); // Revert if invalid
+      setYearInput(selectedYear.toString());
     }
     setIsEditingYear(false);
   };
@@ -82,11 +79,10 @@ export default function Calendar() {
     }
   };
 
-  // Build grid matrix for calendar table
   const renderCalendarMatrix = () => {
     const totalDays = getDaysInMonth(selectedYear, selectedMonth);
     const startDay = getFirstDayOfMonth(selectedYear, selectedMonth);
-    
+
     const rows = [];
     let currentDay = 1;
 
@@ -108,16 +104,9 @@ export default function Calendar() {
 
   return (
     <div className="calendar-container">
-      {/* 1. Heading */}
       <h1 id="heading">Calendar</h1>
 
-      {/* Controls Bar */}
       <div className="controls">
-        {/* Navigation Buttons */}
-        <button id="prev-year" onClick={handlePrevYear}>&lt;&lt;</button>
-        <button id="prev-month" onClick={handlePrevMonth}>&lt;</button>
-
-        {/* Month Dropdown */}
         <select id="month" value={selectedMonth} onChange={handleMonthChange}>
           {MONTHS.map((monthName, index) => (
             <option key={monthName} value={index}>
@@ -126,7 +115,6 @@ export default function Calendar() {
           ))}
         </select>
 
-        {/* Editable Year */}
         {isEditingYear ? (
           <input
             id="year-input"
@@ -143,11 +131,20 @@ export default function Calendar() {
           </span>
         )}
 
-        <button id="next-month" onClick={handleNextMonth}>&gt;</button>
-        <button id="next-year" onClick={handleNextYear}>&gt;&gt;</button>
+        <button id="prev-year" onClick={handlePrevYear}>
+          &lt;&lt;
+        </button>
+        <button id="prev-month" onClick={handlePrevMonth}>
+          &lt;
+        </button>
+        <button id="next-month" onClick={handleNextMonth}>
+          &gt;
+        </button>
+        <button id="next-year" onClick={handleNextYear}>
+          &gt;&gt;
+        </button>
       </div>
 
-      {/* 2. Days Table */}
       <table id="days-table">
         <thead>
           <tr>
