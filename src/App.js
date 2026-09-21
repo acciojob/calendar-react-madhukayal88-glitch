@@ -7,41 +7,34 @@ const MONTHS = [
 ];
 
 function App() {
-  const today = new Date();
-
-  // ✅ CHANGED: hardcode default so tests are deterministic.
-  // If your problem statement says "starts at January 2024", use 0 and 2024.
-  const [month, setMonth] = useState(0);        // 0 = January
+  const [month, setMonth] = useState(0);        // January
   const [year, setYear]   = useState(2024);
   const [isEditingYear, setIsEditingYear] = useState(false);
-  const [yearInput, setYearInput] = useState("2024"); // ✅ string
+  const [yearInput, setYearInput] = useState("2024");
 
-  // ---------- helpers ----------
   const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
-  const getFirstWeekday = (m, y) => new Date(y, m, 1).getDay(); // 0 = Sunday
+  const getFirstWeekday = (m, y) => new Date(y, m, 1).getDay();
 
   const daysInMonth  = getDaysInMonth(month, year);
   const firstWeekday = getFirstWeekday(month, year);
 
-  // ✅ CHANGED: build full weeks (pad both ends so table is always 7-wide)
   const cells = [];
   for (let i = 0; i < firstWeekday; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
-  // ---------- handlers ----------
   const handleMonthChange = (e) => setMonth(Number(e.target.value));
 
   const handleYearDoubleClick = () => {
     setIsEditingYear(true);
-    setYearInput(String(year)); // ✅ string
+    setYearInput(String(year));
   };
 
   const handleYearInputChange = (e) => {
     const v = e.target.value;
     setYearInput(v);
     const parsed = parseInt(v, 10);
-    if (!isNaN(parsed)) setYear(parsed); // live commit for tests
+    if (!isNaN(parsed)) setYear(parsed);
   };
 
   const commitYear = () => {
@@ -63,7 +56,6 @@ function App() {
   const handlePrevYear = () => setYear((y) => y - 1);
   const handleNextYear = () => setYear((y) => y + 1);
 
-  // ---------- render ----------
   return (
     <div>
       <h1 id="heading">Calendar</h1>
@@ -110,11 +102,7 @@ function App() {
           {Array.from({ length: cells.length / 7 }).map((_, w) => (
             <tr key={w}>
               {cells.slice(w * 7, w * 7 + 7).map((day, i) => (
-                <td
-                  key={i}
-                  id={day ? `day-${day}` : undefined}
-                  data-day={day || ""}
-                >
+                <td key={i} id={day ? `day-${day}` : undefined}>
                   {day || ""}
                 </td>
               ))}
