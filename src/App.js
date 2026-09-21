@@ -7,13 +7,15 @@ const MONTHS = [
 ];
 
 function App() {
-  const [month, setMonth] = useState(0);        // January
-  const [year, setYear]   = useState(2024);
+  // ✅ Blueprint-la February 2023 kaatala, so default = February 2023
+  const [month, setMonth] = useState(1);      // 0 = Jan, 1 = Feb
+  const [year, setYear]   = useState(2023);
   const [isEditingYear, setIsEditingYear] = useState(false);
-  const [yearInput, setYearInput] = useState("2024");
+  const [yearInput, setYearInput] = useState("2023");
 
+  // ---------- helpers ----------
   const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
-  const getFirstWeekday = (m, y) => new Date(y, m, 1).getDay();
+  const getFirstWeekday = (m, y) => new Date(y, m, 1).getDay(); // 0 = Sunday
 
   const daysInMonth  = getDaysInMonth(month, year);
   const firstWeekday = getFirstWeekday(month, year);
@@ -23,6 +25,7 @@ function App() {
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
+  // ---------- handlers ----------
   const handleMonthChange = (e) => setMonth(Number(e.target.value));
 
   const handleYearDoubleClick = () => {
@@ -34,7 +37,7 @@ function App() {
     const v = e.target.value;
     setYearInput(v);
     const parsed = parseInt(v, 10);
-    if (!isNaN(parsed)) setYear(parsed);
+    if (!isNaN(parsed)) setYear(parsed); // live commit
   };
 
   const commitYear = () => {
@@ -56,6 +59,7 @@ function App() {
   const handlePrevYear = () => setYear((y) => y - 1);
   const handleNextYear = () => setYear((y) => y + 1);
 
+  // ---------- render ----------
   return (
     <div>
       <h1 id="heading">Calendar</h1>
@@ -85,10 +89,10 @@ function App() {
       )}
 
       <div>
-        <button id="prev-month" onClick={handlePrevMonth}>Prev Month</button>
-        <button id="next-month" onClick={handleNextMonth}>Next Month</button>
-        <button id="prev-year"  onClick={handlePrevYear}>Prev Year</button>
-        <button id="next-year"  onClick={handleNextYear}>Next Year</button>
+        <button id="prev-month" onClick={handlePrevMonth}>{"<<"}</button>
+        <button id="prev-year"  onClick={handlePrevYear}>{"<"}</button>
+        <button id="next-year"  onClick={handleNextYear}>{">"}</button>
+        <button id="next-month" onClick={handleNextMonth}>{">>"}</button>
       </div>
 
       <table id="calendar-table">
