@@ -1,116 +1,134 @@
 import React, { useState } from 'react';
+import './App.css';
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAYS_OF_WEEK = [
+  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+];
 
-export default function Calendar() {
-  const currentDate = new Date();
-  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
-  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
+function Calendar() {
+  const today = new Date();
+
+  const [month, setMonth] = useState(today.getMonth());
+  const [year, setYear] = useState(today.getFullYear());
   const [isEditingYear, setIsEditingYear] = useState(false);
-  const [yearInput, setYearInput] = useState(currentDate.getFullYear().toString());
+  const [yearInput, setYearInput] = useState(
+    today.getFullYear().toString()
+  );
 
-  const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-  const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+  const getDaysInMonth = (year, month) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (year, month) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const handleMonthChange = (e) => {
+    setMonth(Number(e.target.value));
+  };
 
   const handlePrevMonth = () => {
-    if (selectedMonth === 0) {
-      setSelectedMonth(11);
-      const newYear = selectedYear - 1;
-      setSelectedYear(newYear);
+    if (month === 0) {
+      const newYear = year - 1;
+      setMonth(11);
+      setYear(newYear);
       setYearInput(newYear.toString());
     } else {
-      setSelectedMonth((prev) => prev - 1);
+      setMonth(month - 1);
     }
   };
 
   const handleNextMonth = () => {
-    if (selectedMonth === 11) {
-      setSelectedMonth(0);
-      const newYear = selectedYear + 1;
-      setSelectedYear(newYear);
+    if (month === 11) {
+      const newYear = year + 1;
+      setMonth(0);
+      setYear(newYear);
       setYearInput(newYear.toString());
     } else {
-      setSelectedMonth((prev) => prev + 1);
+      setMonth(month + 1);
     }
   };
 
   const handlePrevYear = () => {
-    const newYear = selectedYear - 1;
-    setSelectedYear(newYear);
+    const newYear = year - 1;
+    setYear(newYear);
     setYearInput(newYear.toString());
   };
 
   const handleNextYear = () => {
-    const newYear = selectedYear + 1;
-    setSelectedYear(newYear);
+    const newYear = year + 1;
+    setYear(newYear);
     setYearInput(newYear.toString());
   };
 
-  const handleMonthChange = (e) => {
-    setSelectedMonth(Number(e.target.value));
-  };
-
   const handleYearDoubleClick = () => {
+    setYearInput(year.toString());
     setIsEditingYear(true);
   };
 
-  const handleYearInputChange = (e) => {
-    setYearInput(e.target.value);
-  };
-
   const saveYear = () => {
-    const parsedYear = parseInt(yearInput, 10);
-    if (!isNaN(parsedYear) && parsedYear > 0) {
-      setSelectedYear(parsedYear);
+    const newYear = parseInt(yearInput, 10);
+
+    if (!isNaN(newYear) && newYear > 0) {
+      setYear(newYear);
     } else {
-      setYearInput(selectedYear.toString());
+      setYearInput(year.toString());
     }
+
     setIsEditingYear(false);
   };
 
-  const handleYearKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      saveYear();
-    }
-  };
-
-  const renderCalendarMatrix = () => {
-    const totalDays = getDaysInMonth(selectedYear, selectedMonth);
-    const startDay = getFirstDayOfMonth(selectedYear, selectedMonth);
+  const renderCalendar = () => {
+    const daysInMonth = getDaysInMonth(year, month);
+    const firstDay = getFirstDayOfMonth(year, month);
 
     const rows = [];
-    let currentDay = 1;
+    let day = 1;
 
     for (let row = 0; row < 6; row++) {
       const cells = [];
+
       for (let col = 0; col < 7; col++) {
-        if ((row === 0 && col < startDay) || currentDay > totalDays) {
-          cells.push(<td key={`${row}-${col}`}></td>);
+        const position = row * 7 + col;
+
+        if (position < firstDay || day > daysInMonth) {
+          cells.push(<td key={col}></td>);
         } else {
-          cells.push(<td key={`${row}-${col}`}>{currentDay}</td>);
-          currentDay++;
+          cells.push(<td key={col}>{day}</td>);
+          day++;
         }
       }
+
       rows.push(<tr key={row}>{cells}</tr>);
-      if (currentDay > totalDays) break;
+
+      if (day > daysInMonth) {
+        break;
+      }
     }
+
     return rows;
   };
 
   return (
     <div className="calendar-container">
+
       <h1 id="heading">Calendar</h1>
 
       <div className="controls">
-        <select id="month" value={selectedMonth} onChange={handleMonthChange}>
-          {MONTHS.map((monthName, index) => (
-            <option key={monthName} value={index}>
-              {monthName}
+
+        <select
+          id="month-select"
+          value={month}
+          onChange={handleMonthChange}
+        >
+          {MONTHS.map((name, index) => (
+            <option key={index} value={index}>
+              {name}
             </option>
           ))}
         </select>
@@ -120,29 +138,40 @@ export default function Calendar() {
             id="year-input"
             type="number"
             value={yearInput}
-            onChange={handleYearInputChange}
+            onChange={(e) => setYearInput(e.target.value)}
             onBlur={saveYear}
-            onKeyDown={handleYearKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                saveYear();
+              }
+            }}
             autoFocus
           />
         ) : (
-          <span id="year" onDoubleClick={handleYearDoubleClick}>
-            {selectedYear}
+          <span
+            id="year-display"
+            onDoubleClick={handleYearDoubleClick}
+          >
+            {year}
           </span>
         )}
 
-        <button id="prev-year" onClick={handlePrevYear}>
+        <button id="prev-year-btn" onClick={handlePrevYear}>
           &lt;&lt;
         </button>
-        <button id="prev-month" onClick={handlePrevMonth}>
+
+        <button id="prev-month-btn" onClick={handlePrevMonth}>
           &lt;
         </button>
-        <button id="next-month" onClick={handleNextMonth}>
+
+        <button id="next-month-btn" onClick={handleNextMonth}>
           &gt;
         </button>
-        <button id="next-year" onClick={handleNextYear}>
+
+        <button id="next-year-btn" onClick={handleNextYear}>
           &gt;&gt;
         </button>
+
       </div>
 
       <table id="days-table">
@@ -153,8 +182,14 @@ export default function Calendar() {
             ))}
           </tr>
         </thead>
-        <tbody>{renderCalendarMatrix()}</tbody>
+
+        <tbody>
+          {renderCalendar()}
+        </tbody>
       </table>
+
     </div>
   );
 }
+
+export default Calendar;
