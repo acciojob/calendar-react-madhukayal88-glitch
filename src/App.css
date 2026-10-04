@@ -1,72 +1,52 @@
-.App {
-  font-family: Arial, sans-serif;
+.calendar-container {
+  font-family: sans-serif;
   max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
+  margin: 40px auto;
   text-align: center;
 }
 
-#calendar-heading {
-  font-size: 28px;
+#heading {
+  color: #2b9cb8; /* Matches the blue in the screenshot */
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
-}
-
-#month-select {
-  padding: 8px 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-#year-text {
-  font-weight: bold;
-  padding: 5px 10px;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-#year-text:hover {
-  border: 2px solid #007bff;
-  border-radius: 4px;
-}
-
-#year-input {
-  padding: 5px 10px;
-  font-size: 18px;
-  width: 80px;
-  text-align: center;
-  border: 2px solid #007bff;
-  border-radius: 4px;
+  font-size: 1.2rem;
 }
 
 #calendar-table {
   width: 100%;
-  margin-top: 20px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-#calendar-table th {
-  background-color: #f2f2f2;
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-
+#calendar-table th, 
 #calendar-table td {
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 10px;
   text-align: center;
-  height: 40px;
 }
 
-button {
-  padding: 8px 16px;
-  margin: 0 5px;
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.navigation-buttons button {
+  padding: 5px 10px;
   cursor: pointer;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
 }
 
-button:hover {
-  background-color: #e0e0e0;
+.year-text {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.year-input {
+  width: 60px;
+  font-size: 1.2rem;
+  text-align: center;
 }
