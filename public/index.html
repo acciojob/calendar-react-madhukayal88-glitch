@@ -1,10 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Calendar React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8">
+<title>Calendar</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f5f6f8;
+    margin: 0;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #heading {
+    margin: 0 0 20px;
+    font-size: 28px;
+    color: #222;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .controls button,
+  .controls select,
+  #year-input {
+    font-size: 15px;
+    padding: 6px 12px;
+    border: 1px solid #ccd0d6;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+  }
+  #year-display {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 52px;
+    text-align: center;
+    user-select: none;
+  }
+  #year-input {
+    width: 78px;
+    text-align: center;
+    display: none;
+  }
+  table {
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  thead th {
+    background: #4a6cf7;
+    color: #fff;
+    padding: 10px 0;
+    width: 46px;
+  }
+  tbody td {
+    height: 40px;
+    text-align: center;
+    border: 1px solid #eceff3;
+    width: 46px;
+  }
+  tbody td.today {
+    background: #4a6cf7;
+    color: #fff;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADING -->
+  <h1 id="heading">Calendar</h1>
+
+  <div class="controls">
+    <button id="prev-year-btn">&laquo;</button>
+    <button id="prev-month-btn">&lsaquo;</button>
+
+    <select id="month-select"></select>
+
+    <span id="year-display"></span>
+    <input id="year-input" type="number" />
+
+    <button id="next-month-btn">&rsaquo;</button>
+    <button id="next-year-btn">&raquo;</button>
+  </div>
+
+  <table id="days-table">
+    <thead>
+      <tr>
+        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
+        <th>Thu</th><th>Fri</th><th>Sat</th>
+      </tr>
+    </thead>
+    <tbody id="days-body"></tbody>
+  </table>
+
+<script>
+(function () {
+  "use strict";
+
+  var MONTHS = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  var monthSelect  = document.getElementById("month-select");
+  var yearDisplay  = document.getElementById("year-display");
+  var yearInput    = document.getElementById("year-input");
+  var daysBody     = document.getElementById("days-body");
+
+  var prevMonthBtn = document.getElementById("prev-month-btn");
+  var nextMonthBtn = document.getElementById("next-month-btn");
+  var prevYearBtn  = document.getElementById("prev-year-btn");
+  var nextYearBtn  = document.getElementById("next-year-btn");
+
+  var today        = new Date();
+  var currentMonth = today.getMonth();
+  var currentYear  = today.getFullYear();
+
+  // Build month dropdown
+  MONTHS.forEach(function (name, i) {
+    var opt = document.createElement("option");
+    opt.value = String(i);
+    opt.textContent = name;
+    monthSelect.appendChild(opt);
+  });
+
+  // Always render 6 rows x 7 cols = 42 cells
+  function renderDaysTable() {
+    daysBody.innerHTML = "";
+
+    var firstWeekday = new Date(currentYear, currentMonth, 1).getDay();
+    var daysInMonth  = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    var isCurrentMonth =
+      currentYear === today.getFullYear() && currentMonth === today.getMonth();
+
+    var day = 1;
+
+    for (var row = 0; row < 6; row++) {
+      var tr = document.createElement("tr");
+
+      for (var col = 0; col < 7; col++) {
+        var td = document.createElement("td");
+        var idx = row * 7 + col;
+
+        if (idx >= firstWeekday && day <= daysInMonth) {
+          td.textContent = String(day);
+          if (isCurrentMonth && day === today.getDate()) {
+            td.classList.add("today");
+          }
+          day++;
+        }
+        tr.appendChild(td);
+      }
+      daysBody.appendChild(tr);
+    }
+  }
+
+  function render() {
+    monthSelect.value = String(currentMonth);
+    yearDisplay.textContent = String(currentYear);
+    yearInput.value = String(currentYear);
+    renderDaysTable();
+  }
+
+  // Year editing
+  yearDisplay.addEventListener("dblclick", function () {
+    yearDisplay.style.display = "none";
+    yearInput.style.display = "inline-block";
+    yearInput.value = String(currentYear);
+    yearInput.focus();
+    yearInput.select();
+  });
+
+  function commitYear() {
+    var v = parseInt(yearInput.value, 10);
+    if (!isNaN(v) && v >= 1 && v <= 9999) currentYear = v;
+    yearInput.style.display = "none";
+    yearDisplay.style.display = "";
+    render();
+  }
+
+  yearInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); commitYear(); }
+    else if (e.key === "Escape") {
+      yearInput.style.display = "none";
+      yearDisplay.style.display = "";
+    }
+  });
+  yearInput.addEventListener("blur", commitYear);
+
+  // Navigation
+  function changeMonth(delta) {
+    var total = currentYear * 12 + currentMonth + delta;
+    currentYear  = Math.floor(total / 12);
+    currentMonth = ((total % 12) + 12) % 12;
+    render();
+  }
+
+  monthSelect.addEventListener("change", function () {
+    currentMonth = parseInt(monthSelect.value, 10);
+    renderDaysTable();
+  });
+
+  prevMonthBtn.addEventListener("click", function () { changeMonth(-1); });
+  nextMonthBtn.addEventListener("click", function () { changeMonth(1); });
+  prevYearBtn.addEventListener("click", function () { currentYear--; render(); });
+  nextYearBtn.addEventListener("click", function () { currentYear++; render(); });
+
+  render();
+})();
+</script>
+
+</body>
 </html>
