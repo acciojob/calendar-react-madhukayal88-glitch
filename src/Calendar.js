@@ -1,195 +1,75 @@
+# Calendar React
+
 import React, { useState } from 'react';
-import './App.css';
 
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
+const Calendar = () => {
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [year, setYear] = useState(currentDate.getFullYear());
+    const [month, setMonth] = useState(currentDate.getMonth());
 
-const DAYS_OF_WEEK = [
-  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
-];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-function Calendar() {
-  const today = new Date();
+    const handleMonthChange = (event) => {
+        setMonth(event.target.value);
+    };
 
-  const [month, setMonth] = useState(today.getMonth());
-  const [year, setYear] = useState(today.getFullYear());
-  const [isEditingYear, setIsEditingYear] = useState(false);
-  const [yearInput, setYearInput] = useState(
-    today.getFullYear().toString()
-  );
+    const handleYearChange = (event) => {
+        setYear(event.target.value);
+    };
 
-  const getDaysInMonth = (year, month) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+    const handleYearDoubleClick = () => {
+        const input = document.getElementById('year-input');
+        input.style.display = 'block';
+        input.focus();
+    };
 
-  const getFirstDayOfMonth = (year, month) => {
-    return new Date(year, month, 1).getDay();
-  };
+    const updateDays = () => {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+        return daysArray;
+    };
 
-  const handleMonthChange = (e) => {
-    setMonth(Number(e.target.value));
-  };
-
-  const handlePrevMonth = () => {
-    if (month === 0) {
-      const newYear = year - 1;
-      setMonth(11);
-      setYear(newYear);
-      setYearInput(newYear.toString());
-    } else {
-      setMonth(month - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (month === 11) {
-      const newYear = year + 1;
-      setMonth(0);
-      setYear(newYear);
-      setYearInput(newYear.toString());
-    } else {
-      setMonth(month + 1);
-    }
-  };
-
-  const handlePrevYear = () => {
-    const newYear = year - 1;
-    setYear(newYear);
-    setYearInput(newYear.toString());
-  };
-
-  const handleNextYear = () => {
-    const newYear = year + 1;
-    setYear(newYear);
-    setYearInput(newYear.toString());
-  };
-
-  const handleYearDoubleClick = () => {
-    setYearInput(year.toString());
-    setIsEditingYear(true);
-  };
-
-  const saveYear = () => {
-    const newYear = parseInt(yearInput, 10);
-
-    if (!isNaN(newYear) && newYear > 0) {
-      setYear(newYear);
-    } else {
-      setYearInput(year.toString());
-    }
-
-    setIsEditingYear(false);
-  };
-
-  const renderCalendar = () => {
-    const daysInMonth = getDaysInMonth(year, month);
-    const firstDay = getFirstDayOfMonth(year, month);
-
-    const rows = [];
-    let day = 1;
-
-    for (let row = 0; row < 6; row++) {
-      const cells = [];
-
-      for (let col = 0; col < 7; col++) {
-        const position = row * 7 + col;
-
-        if (position < firstDay || day > daysInMonth) {
-          cells.push(<td key={col}></td>);
+    const navigateMonth = (direction) => {
+        if (direction === 'next') {
+            setMonth(month === 11 ? 0 : month + 1);
+            if (month === 11) setYear(year + 1);
         } else {
-          cells.push(<td key={col}>{day}</td>);
-          day++;
+            setMonth(month === 0 ? 11 : month - 1);
+            if (month === 0) setYear(year - 1);
         }
-      }
+    };
 
-      rows.push(<tr key={row}>{cells}</tr>);
-
-      if (day > daysInMonth) {
-        break;
-      }
-    }
-
-    return rows;
-  };
-
-  return (
-    <div className="calendar-container">
-
-      <h1 id="heading">Calendar</h1>
-
-      <div className="controls">
-
-        <select
-          id="month-select"
-          value={month}
-          onChange={handleMonthChange}
-        >
-          {MONTHS.map((name, index) => (
-            <option key={index} value={index}>
-              {name}
-            </option>
-          ))}
-        </select>
-
-        {isEditingYear ? (
-          <input
-            id="year-input"
-            type="number"
-            value={yearInput}
-            onChange={(e) => setYearInput(e.target.value)}
-            onBlur={saveYear}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                saveYear();
-              }
-            }}
-            autoFocus
-          />
-        ) : (
-          <span
-            id="year-display"
-            onDoubleClick={handleYearDoubleClick}
-          >
-            {year}
-          </span>
-        )}
-
-        <button id="prev-year-btn" onClick={handlePrevYear}>
-          &lt;&lt;
-        </button>
-
-        <button id="prev-month-btn" onClick={handlePrevMonth}>
-          &lt;
-        </button>
-
-        <button id="next-month-btn" onClick={handleNextMonth}>
-          &gt;
-        </button>
-
-        <button id="next-year-btn" onClick={handleNextYear}>
-          &gt;&gt;
-        </button>
-
-      </div>
-
-      <table id="days-table">
-        <thead>
-          <tr>
-            {DAYS_OF_WEEK.map((day) => (
-              <th key={day}>{day}</th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {renderCalendar()}
-        </tbody>
-      </table>
-
-    </div>
-  );
-}
+    return (
+        <div>
+            <h1 id="calendar-heading">Calendar</h1>
+            <select id="month-dropdown" onChange={handleMonthChange} value={month}>
+                {months.map((monthName, index) => (
+                    <option key={index} value={index}>{monthName}</option>
+                ))}
+            </select>
+            <div id="year-display" onDoubleClick={handleYearDoubleClick}>
+                <input
+                    id="year-input"
+                    type="number"
+                    value={year}
+                    onChange={handleYearChange}
+                    style={{ display: 'none' }}
+                />
+                {year}
+            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        {updateDays().map(day => (
+                            <td key={day}>{day}</td>
+                        ))}
+                    </tr>
+                </tbody>
+            </table>
+            <button onClick={() => navigateMonth('prev')}>Previous</button>
+            <button onClick={() => navigateMonth('next')}>Next</button>
+        </div>
+    );
+};
 
 export default Calendar;
