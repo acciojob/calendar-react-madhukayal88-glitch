@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="9" failures="0" time="1.268">
+  <testsuite name="Rendering Test." errors="0" failures="0" skipped="0" timestamp="2026-10-11T13:59:10" time="1" tests="9">
+    <testcase classname="Rendering Test. Calendar heading exists" name="Rendering Test. Calendar heading exists" time="0.043">
+    </testcase>
+    <testcase classname="Rendering Test. Rendering correct year and Month in respective tags" name="Rendering Test. Rendering correct year and Month in respective tags" time="0.009">
+    </testcase>
+    <testcase classname="Rendering Test. Should render table with proper binding of ids" name="Rendering Test. Should render table with proper binding of ids" time="0.008">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on changing the year" name="Rendering Test. Should update the table on changing the year" time="0.028">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on changing the month" name="Rendering Test. Should update the table on changing the month" time="0.011">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on clicking the previous month button" name="Rendering Test. Should update the table on clicking the previous month button" time="0.015">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on clicking the next month button" name="Rendering Test. Should update the table on clicking the next month button" time="0.009">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on clicking the next year button" name="Rendering Test. Should update the table on clicking the next year button" time="0.009">
+    </testcase>
+    <testcase classname="Rendering Test. Should update the table on clicking the previous year button" name="Rendering Test. Should update the table on clicking the previous year button" time="0.009">
+    </testcase>
+  </testsuite>
+</testsuites>
